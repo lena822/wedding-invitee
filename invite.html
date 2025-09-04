@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Расписка</title>
+  <style>
+    :root { --bg:#faf7f5; --card:#fff; --text:#141414; --muted:#777; --accent:#111; }
+    html,body { margin:0; padding:0; }
+    body {
+      font-family: system-ui, -apple-system, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+    .card {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+      border: 2px solid transparent;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .card.sent { border-color:#25a244; box-shadow:0 0 0 4px rgba(37,162,68,.15); }
+    .card.error { border-color:#d33; box-shadow:0 0 0 4px rgba(211,51,51,.12); }
+    h1 { text-align:center; font-weight:600; margin: 8px 0 20px; }
+    label { display:block; font-size:16px; margin: 14px 0 6px; }
+    .req::after { content:" *"; color:#d33; }
+    input[type="text"],
+    input[type="tel"] {
+      width:100%; box-sizing:border-box; font-size:16px;
+      padding:14px 12px; border:1px solid #e3e3e3; border-radius:12px;
+      background:#f7f7f7; outline:none;
+    }
+    input[type="text"]:focus,
+    input[type="tel"]:focus { border-color:#c9c9c9; background:#fff; }
+    .radios { margin-top:8px; }
+    .radios label { display:flex; align-items:flex-start; gap:10px; margin:10px 0; }
+    .note { font-size:13px; color:var(--muted); margin-top:10px; }
+    .notice { margin-top:14px; font-size:14px; display:none; }
+    .notice.ok { color:#1a7f37; display:block; }
+    .notice.err { color:#c62828; display:block; }
+    button[type="submit"]{
+      width:100%; margin-top:18px; padding:14px 16px; font-size:16px; font-weight:600;
+      background:#fff; color:var(--accent); border:2px solid #111; border-radius:14px;
+      cursor:pointer;
+    }
+    button[type="submit"]:disabled { opacity:.7; cursor:default; }
+    button[type="submit"]:active { transform: translateY(1px); }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <h1>Расписка</h1>
+
+    <form id="receiptForm" action="https://formsubmit.co/Antesiik1819@yandex.ru" method="POST" autocomplete="on">
+      <!-- отключить капчу -->
+      <input type="hidden" name="_captcha" value="false">
+      <!-- тема письма -->
+      <input type="hidden" name="_subject" value="Новая расписка с сайта">
+      <!-- красивый вид письма -->
+      <input type="hidden" name="_template" value="table">
+      <!-- антиспам -->
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+      <label class="req" for="fio">ФИО</label>
+      <input id="fio" name="ФИО" type="text" required placeholder="Иванов Иван Иванович">
+
+      <label class="req" for="phone">Номер телефона</label>
+      <input id="phone" name="Телефон" type="tel" inputmode="tel" required
+             placeholder="+7 912 345-67-89"
+             pattern="^[0-9()+\-\s]{7,}$"
+             title="Введите номер телефона">
+
+      <div class="radios">
+        <label>
+          <input type="radio" name="Статус" value="Обязуюсь своевременно явиться" required>
+          <span>Обязуюсь своевременно явиться к назначенной дате и времени</span>
+        </label>
+        <label>
+          <input type="radio" name="Статус" value="Не смогу явиться" required>
+          <span>Не смогу явиться</span>
+        </label>
+      </div>
+
+      <div class="note">Отправляя форму, вы соглашаетесь с обработкой персональных данных.</div>
+
+      <div id="notice" class="notice" aria-live="polite"></div>
+
+      <button id="submitBtn" type="submit">ОТПРАВИТЬ</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('receiptForm');
+    const card = document.getElementById('card');
+    const notice = document.getElementById('notice');
+    const btn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      notice.
